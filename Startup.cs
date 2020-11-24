@@ -12,6 +12,9 @@ using PlannerProject.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Security.Claims;
+using PlannerProject.ActionFilters;
+using Microsoft.AspNetCore.Http;
 
 namespace PlannerProject
 {
@@ -34,6 +37,12 @@ namespace PlannerProject
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
+
+            services.AddScoped<ClaimsPrincipal>(services => services.GetService<IHttpContextAccessor>().HttpContext.User);
+            services.AddControllers(config =>
+            {
+                config.Filters.Add(typeof(GlobalRouting));
+            });
             services.AddControllersWithViews();
             services.AddRazorPages();
         }

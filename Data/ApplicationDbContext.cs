@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using PlannerProject.Models;
 
 namespace PlannerProject.Data
 {
@@ -13,6 +14,8 @@ namespace PlannerProject.Data
             : base(options)
         {
         }
+        public DbSet<Parent> Parents { get; set; }
+        public DbSet<Child> Children { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -20,9 +23,15 @@ namespace PlannerProject.Data
                 .HasData(
                     new IdentityRole
                     {
-                        Name = "Admin",
-                        NormalizedName = "ADMIN"
-                    }
+                        Name = "Parent",
+                        NormalizedName = "PARENT"
+                    },
+                     new IdentityRole
+                     {
+                         Name = "Child",
+                         NormalizedName = "CHILD"
+                     }
+
             );
         }
     }

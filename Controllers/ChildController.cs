@@ -5,57 +5,39 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using PlannerProject.Data;
 
 namespace PlannerProject.Controllers
 {
-    public class ParentController : Controller
+    public class ChildController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public ParentController(ApplicationDbContext context)
+        public ChildController(ApplicationDbContext context)
         {
             _context = context;
         }
-        // GET: ParentController
-        public async Task<ActionResult> Index()
+        // GET: ChildController
+        public ActionResult Index()
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var CurrentParent = _context.Parents.Where(e => e.IdentityUserId == userId).Single();
-            if (CurrentParent == null)
-            {
-                return RedirectToAction("Create");
-            }
-            var applicationDbContext = await _context.Children.Where(c => c.LastName == CurrentParent.LastName).ToListAsync();
-            return View(applicationDbContext);
+            //var applicationDbContext = _context.Child.Inclue(c => c.IdentityUser);
+            return View();
         }
-        // GET: ParentController/Details/5
-        public async Task<IActionResult> Details(int? id)
+
+        // GET: ChildController/Details/5
+        public ActionResult Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var parent = await _context.Parents
-                .Include(e => e.IdentityUser)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (parent == null)
-            {
-                return NotFound();
-            }
-
-            return View(parent);
+            return View();
         }
 
-        // GET: ParentController/Create
+        // GET: ChildController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: ParentController/Create
+        // POST: ChildController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
@@ -70,13 +52,13 @@ namespace PlannerProject.Controllers
             }
         }
 
-        // GET: ParentController/Edit/5
+        // GET: ChildController/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: ParentController/Edit/5
+        // POST: ChildController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -91,13 +73,13 @@ namespace PlannerProject.Controllers
             }
         }
 
-        // GET: ParentController/Delete/5
+        // GET: ChildController/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: ParentController/Delete/5
+        // POST: ChildController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
