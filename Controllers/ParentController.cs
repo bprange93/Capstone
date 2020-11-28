@@ -5,8 +5,10 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PlannerProject.Data;
+using PlannerProject.Models;
 
 namespace PlannerProject.Controllers
 {
@@ -22,12 +24,12 @@ namespace PlannerProject.Controllers
         public async Task<ActionResult> Index()
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var CurrentParent = _context.Parents.Where(e => e.IdentityUserId == userId).Single();
+            var CurrentParent = _context.Parent.Where(e => e.IdentityUserId == userId).Single();
             if (CurrentParent == null)
             {
                 return RedirectToAction("Create");
             }
-            var applicationDbContext = await _context.Children.Where(c => c.LastName == CurrentParent.LastName).ToListAsync();
+            var applicationDbContext = await _context.Child.Where(c => c.LastName == CurrentParent.LastName).ToListAsync();
             return View(applicationDbContext);
         }
         // GET: ParentController/Details/5
@@ -38,7 +40,7 @@ namespace PlannerProject.Controllers
                 return NotFound();
             }
 
-            var parent = await _context.Parents
+            var parent = await _context.Parent
                 .Include(e => e.IdentityUser)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (parent == null)
@@ -58,20 +60,22 @@ namespace PlannerProject.Controllers
         // POST: ParentController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create([Bind("Id,FistName,LastName,Child")] Parent parent)
         {
-            try
+            if (ModelState.IsValid)
             {
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                parent.IdentityUserId = userId;
+                _context.Add(parent);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", parent.IdentityUserId);
+            return View(parent);
         }
 
         // GET: ParentController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int? id)
         {
             return View();
         }

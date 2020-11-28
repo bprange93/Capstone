@@ -3,17 +3,15 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PlannerProject.Data;
 
-namespace PlannerProject.Data.Migrations
+namespace PlannerProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201123173250_Add-Migration Initial")]
-    partial class AddMigrationInitial
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,10 +48,17 @@ namespace PlannerProject.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "2f45d7d8-94e0-4e3f-931e-33eb5c08d599",
-                            ConcurrencyStamp = "cbde7742-f7e1-4e24-85ca-745ca7af9cdc",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
+                            Id = "42d1aff8-73b9-4fde-95dc-f2cf93121514",
+                            ConcurrencyStamp = "bdf13397-6e23-463f-b0a2-9f29fe001e57",
+                            Name = "Parent",
+                            NormalizedName = "PARENT"
+                        },
+                        new
+                        {
+                            Id = "caf86ccf-29d4-4f4f-bedf-14b0db775c5c",
+                            ConcurrencyStamp = "6090b9aa-6daf-4f94-b9b2-eb5cefa180a4",
+                            Name = "Child",
+                            NormalizedName = "CHILD"
                         });
                 });
 
@@ -226,6 +231,73 @@ namespace PlannerProject.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("PlannerProject.Models.Child", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("ChoreDone")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ChoresList")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IdentityUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Rewards")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdentityUserId");
+
+                    b.ToTable("Child");
+                });
+
+            modelBuilder.Entity("PlannerProject.Models.Parent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Child")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("ChoreDone")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ChoresList")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IdentityUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Rewards")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdentityUserId");
+
+                    b.ToTable("Parent");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -275,6 +347,20 @@ namespace PlannerProject.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("PlannerProject.Models.Child", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
+                        .WithMany()
+                        .HasForeignKey("IdentityUserId");
+                });
+
+            modelBuilder.Entity("PlannerProject.Models.Parent", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
+                        .WithMany()
+                        .HasForeignKey("IdentityUserId");
                 });
 #pragma warning restore 612, 618
         }

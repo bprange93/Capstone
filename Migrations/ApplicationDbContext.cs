@@ -14,8 +14,8 @@ namespace PlannerProject.Data
             : base(options)
         {
         }
-        public DbSet<Parent> Parents { get; set; }
-        public DbSet<Child> Children { get; set; }
+        public DbSet<Parent> Parent { get; set; }
+        public DbSet<Child> Child { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
