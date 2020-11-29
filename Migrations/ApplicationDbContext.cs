@@ -34,5 +34,6 @@ namespace PlannerProject.Data
 
             );
         }
+        public DbSet<PlannerProject.Models.Planner> Planner { get; set; }
     }
 }

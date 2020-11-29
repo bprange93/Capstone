@@ -60,7 +60,7 @@ namespace PlannerProject.Controllers
         // POST: ParentController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FistName,LastName,Child")] Parent parent)
+        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Child")] Parent parent)
         {
             if (ModelState.IsValid)
             {
@@ -73,6 +73,8 @@ namespace PlannerProject.Controllers
             ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", parent.IdentityUserId);
             return View(parent);
         }
+
+        
 
         // GET: ParentController/Edit/5
         public ActionResult Edit(int? id)

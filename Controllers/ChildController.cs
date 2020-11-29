@@ -5,7 +5,9 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using PlannerProject.Data;
+using PlannerProject.Models;
 
 namespace PlannerProject.Controllers
 {
@@ -32,24 +34,25 @@ namespace PlannerProject.Controllers
         }
 
         // GET: ChildController/Create
-        public ActionResult Create()
+        public IActionResult Create()
         {
+            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
         // POST: ChildController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,")] Child child)
         {
-            try
+            if (ModelState.IsValid)
             {
+                _context.Add(child);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id");
+            return View(child);
         }
 
         // GET: ChildController/Edit/5
@@ -61,16 +64,20 @@ namespace PlannerProject.Controllers
         // POST: ChildController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(int? id)
         {
-            try
+            if (id == null)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
+
+            var child = await _context.Child.FindAsync(id);
+            if (child == null)
             {
-                return View();
+                return NotFound();
             }
+            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", child.IdentityUserId);
+            return View(child);
         }
 
         // GET: ChildController/Delete/5
