@@ -20,6 +20,7 @@ namespace PlannerProject.Controllers
         // GET: Planner
         public ActionResult Index()
         {
+           
             return View();
         }
 
@@ -38,16 +39,31 @@ namespace PlannerProject.Controllers
         // POST: Planner/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id, DayOfWeek, Reward, Chores")] Planner planner)
+        public async Task<IActionResult> Create([Bind("Id, DayOfWeek, Reward, chores")] Planner planner)
         {
             if (ModelState.IsValid)
             {
+                var model = new Planner();
                 _context.Add(planner);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View();
         }
+
+        public ActionResult CreateChore(int plannerId)
+        {
+            
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        //public async Task<IActionResult> CreateChore([Bind("Name, isCompleted")] Chore chore)
+        //{
+        //    var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //    _context.Add();
+        //    await _context.SaveChangesAsync();
+        //}
 
         // GET: Planner/Edit/5
         public ActionResult Edit(int id)

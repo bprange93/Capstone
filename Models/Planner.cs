@@ -11,7 +11,6 @@ namespace PlannerProject.Models
         [Key]
         public int Id { get; set; }
         public string DayOfWeek { get; set; }
-        public List<Chore> chores { get; set; }
         public string Reward { get; set; }
     }
 }

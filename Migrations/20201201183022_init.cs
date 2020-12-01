@@ -228,14 +228,15 @@ namespace PlannerProject.Migrations
                 {
                     Name = table.Column<string>(nullable: false),
                     isCompleted = table.Column<bool>(nullable: false),
-                    PlannerId = table.Column<int>(nullable: true)
+                    plannerId = table.Column<string>(nullable: true),
+                    plannerId1 = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Chore", x => x.Name);
                     table.ForeignKey(
-                        name: "FK_Chore_Planner_PlannerId",
-                        column: x => x.PlannerId,
+                        name: "FK_Chore_Planner_plannerId1",
+                        column: x => x.plannerId1,
                         principalTable: "Planner",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -244,12 +245,12 @@ namespace PlannerProject.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "b98c7817-7590-4574-8292-ebca2233a34b", "f9f38a8c-e41e-4c70-9b1d-4330c32609d5", "Parent", "PARENT" });
+                values: new object[] { "37572c23-8404-4e9f-b8ce-ba9134af4178", "09e6e913-8cfa-4b6e-88ca-ba4e1bfc4541", "Parent", "PARENT" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "c44bd4e6-650a-48c0-a8d8-c9bb091bf2d8", "55c654d4-690e-4d97-8add-4eab1db67517", "Child", "CHILD" });
+                values: new object[] { "50be308d-9f24-487a-8768-4fe3b4468f2b", "7a3454e2-3e56-46ec-8bab-f184e5519a5b", "Child", "CHILD" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -296,9 +297,9 @@ namespace PlannerProject.Migrations
                 column: "IdentityUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Chore_PlannerId",
+                name: "IX_Chore_plannerId1",
                 table: "Chore",
-                column: "PlannerId");
+                column: "plannerId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Parent_IdentityUserId",

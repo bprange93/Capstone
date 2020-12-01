@@ -36,5 +36,6 @@ namespace PlannerProject.Data
         }
         public DbSet<PlannerProject.Models.Planner> Planner { get; set; }
         public DbSet<PlannerProject.Models.ParentChildJunction> ParentChildJunction { get; set; }
+        public DbSet<PlannerProject.Models.Chore> Chore { get; set; }
     }
 }

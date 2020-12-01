@@ -48,15 +48,15 @@ namespace PlannerProject.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "b98c7817-7590-4574-8292-ebca2233a34b",
-                            ConcurrencyStamp = "f9f38a8c-e41e-4c70-9b1d-4330c32609d5",
+                            Id = "37572c23-8404-4e9f-b8ce-ba9134af4178",
+                            ConcurrencyStamp = "09e6e913-8cfa-4b6e-88ca-ba4e1bfc4541",
                             Name = "Parent",
                             NormalizedName = "PARENT"
                         },
                         new
                         {
-                            Id = "c44bd4e6-650a-48c0-a8d8-c9bb091bf2d8",
-                            ConcurrencyStamp = "55c654d4-690e-4d97-8add-4eab1db67517",
+                            Id = "50be308d-9f24-487a-8768-4fe3b4468f2b",
+                            ConcurrencyStamp = "7a3454e2-3e56-46ec-8bab-f184e5519a5b",
                             Name = "Child",
                             NormalizedName = "CHILD"
                         });
@@ -259,15 +259,18 @@ namespace PlannerProject.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("PlannerId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("isCompleted")
                         .HasColumnType("bit");
 
+                    b.Property<string>("plannerId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("plannerId1")
+                        .HasColumnType("int");
+
                     b.HasKey("Name");
 
-                    b.HasIndex("PlannerId");
+                    b.HasIndex("plannerId1");
 
                     b.ToTable("Chore");
                 });
@@ -391,9 +394,9 @@ namespace PlannerProject.Migrations
 
             modelBuilder.Entity("PlannerProject.Models.Chore", b =>
                 {
-                    b.HasOne("PlannerProject.Models.Planner", null)
-                        .WithMany("chores")
-                        .HasForeignKey("PlannerId");
+                    b.HasOne("PlannerProject.Models.Planner", "planner")
+                        .WithMany()
+                        .HasForeignKey("plannerId1");
                 });
 
             modelBuilder.Entity("PlannerProject.Models.Parent", b =>
