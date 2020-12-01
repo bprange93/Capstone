@@ -23,11 +23,11 @@ namespace PlannerProject.ActionFilters
             {
                 if (_claimsPrincipal.IsInRole("Parent"))
                 {
-                    context.Result = new RedirectToActionResult("Index", "Parents", null);
+                    context.Result = new RedirectToActionResult("Index", "Parent", null);
                 }
                 else if (_claimsPrincipal.IsInRole("Child"))
                 {
-                    context.Result = new RedirectToActionResult("Index", "Children", null);
+                    context.Result = new RedirectToActionResult("Index", "Child", null);
                 }
             }
         }

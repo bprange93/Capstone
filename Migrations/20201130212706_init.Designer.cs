@@ -10,7 +10,7 @@ using PlannerProject.Data;
 namespace PlannerProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201125174317_init")]
+    [Migration("20201130212706_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,15 +50,15 @@ namespace PlannerProject.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "42d1aff8-73b9-4fde-95dc-f2cf93121514",
-                            ConcurrencyStamp = "bdf13397-6e23-463f-b0a2-9f29fe001e57",
+                            Id = "b98c7817-7590-4574-8292-ebca2233a34b",
+                            ConcurrencyStamp = "f9f38a8c-e41e-4c70-9b1d-4330c32609d5",
                             Name = "Parent",
                             NormalizedName = "PARENT"
                         },
                         new
                         {
-                            Id = "caf86ccf-29d4-4f4f-bedf-14b0db775c5c",
-                            ConcurrencyStamp = "6090b9aa-6daf-4f94-b9b2-eb5cefa180a4",
+                            Id = "c44bd4e6-650a-48c0-a8d8-c9bb091bf2d8",
+                            ConcurrencyStamp = "55c654d4-690e-4d97-8add-4eab1db67517",
                             Name = "Child",
                             NormalizedName = "CHILD"
                         });
@@ -240,12 +240,6 @@ namespace PlannerProject.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("ChoreDone")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("ChoresList")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
@@ -253,9 +247,6 @@ namespace PlannerProject.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Rewards")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -265,21 +256,30 @@ namespace PlannerProject.Migrations
                     b.ToTable("Child");
                 });
 
+            modelBuilder.Entity("PlannerProject.Models.Chore", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("PlannerId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("isCompleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Name");
+
+                    b.HasIndex("PlannerId");
+
+                    b.ToTable("Chore");
+                });
+
             modelBuilder.Entity("PlannerProject.Models.Parent", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Child")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("ChoreDone")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("ChoresList")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
@@ -290,14 +290,47 @@ namespace PlannerProject.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Rewards")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("IdentityUserId");
 
                     b.ToTable("Parent");
+                });
+
+            modelBuilder.Entity("PlannerProject.Models.ParentChildJunction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ChildId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ParentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ParentChildJunction");
+                });
+
+            modelBuilder.Entity("PlannerProject.Models.Planner", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("DayOfWeek")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reward")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Planner");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -356,6 +389,13 @@ namespace PlannerProject.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
                         .WithMany()
                         .HasForeignKey("IdentityUserId");
+                });
+
+            modelBuilder.Entity("PlannerProject.Models.Chore", b =>
+                {
+                    b.HasOne("PlannerProject.Models.Planner", null)
+                        .WithMany("chores")
+                        .HasForeignKey("PlannerId");
                 });
 
             modelBuilder.Entity("PlannerProject.Models.Parent", b =>

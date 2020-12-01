@@ -24,12 +24,21 @@ namespace PlannerProject.Controllers
         public async Task<ActionResult> Index()
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var CurrentParent = _context.Parent.Where(e => e.IdentityUserId == userId).Single();
+            var CurrentParent = _context.Parent.Where(e => e.IdentityUserId == userId).SingleOrDefault();
             if (CurrentParent == null)
             {
                 return RedirectToAction("Create");
             }
-            var applicationDbContext = await _context.Child.Where(c => c.LastName == CurrentParent.LastName).ToListAsync();
+            var parentChildJunction = _context.ParentChildJunction.Where(data => data.ParentId == CurrentParent.Id).ToList();
+            var applicationDbContext = new List<Child>();
+            if (parentChildJunction != null)
+            {
+                parentChildJunction.ForEach(junction =>
+                {
+                    var children = _context.Child.Where(child => child.Id == junction.ChildId).First();
+                    applicationDbContext.Add(children);
+                });
+            }
             return View(applicationDbContext);
         }
         // GET: ParentController/Details/5
@@ -60,7 +69,7 @@ namespace PlannerProject.Controllers
         // POST: ParentController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Child")] Parent parent)
+        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName")] Parent parent)
         {
             if (ModelState.IsValid)
             {
@@ -74,7 +83,33 @@ namespace PlannerProject.Controllers
             return View(parent);
         }
 
-        
+        public ActionResult CreateChild()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateChild([Bind("Id,FirstName,LastName,")] Child child)
+        {
+            if (ModelState.IsValid)
+            {
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                _context.Add(child);
+                await _context.SaveChangesAsync();
+
+                ParentChildJunction parentChildJunction = new ParentChildJunction();
+                parentChildJunction.ChildId = _context.Child.ToList().Last().Id;
+                parentChildJunction.ParentId = _context.Parent.Where(parent => parent.IdentityUserId == userId).ToList().First().Id;
+                _context.ParentChildJunction.Add(parentChildJunction);
+                await _context.SaveChangesAsync();
+                
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", child.IdentityUserId);
+            return View(child);
+        }
+
+
 
         // GET: ParentController/Edit/5
         public ActionResult Edit(int? id)

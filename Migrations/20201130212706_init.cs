@@ -47,6 +47,34 @@ namespace PlannerProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ParentChildJunction",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ParentId = table.Column<int>(nullable: false),
+                    ChildId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ParentChildJunction", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Planner",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DayOfWeek = table.Column<string>(nullable: true),
+                    Reward = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Planner", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -160,9 +188,6 @@ namespace PlannerProject.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
-                    ChoresList = table.Column<string>(nullable: true),
-                    ChoreDone = table.Column<bool>(nullable: false),
-                    Rewards = table.Column<string>(nullable: true),
                     IdentityUserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -184,10 +209,6 @@ namespace PlannerProject.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
-                    ChoresList = table.Column<string>(nullable: true),
-                    ChoreDone = table.Column<bool>(nullable: false),
-                    Rewards = table.Column<string>(nullable: true),
-                    Child = table.Column<string>(nullable: true),
                     IdentityUserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -201,15 +222,34 @@ namespace PlannerProject.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "42d1aff8-73b9-4fde-95dc-f2cf93121514", "bdf13397-6e23-463f-b0a2-9f29fe001e57", "Parent", "PARENT" });
+            migrationBuilder.CreateTable(
+                name: "Chore",
+                columns: table => new
+                {
+                    Name = table.Column<string>(nullable: false),
+                    isCompleted = table.Column<bool>(nullable: false),
+                    PlannerId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Chore", x => x.Name);
+                    table.ForeignKey(
+                        name: "FK_Chore_Planner_PlannerId",
+                        column: x => x.PlannerId,
+                        principalTable: "Planner",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "caf86ccf-29d4-4f4f-bedf-14b0db775c5c", "6090b9aa-6daf-4f94-b9b2-eb5cefa180a4", "Child", "CHILD" });
+                values: new object[] { "b98c7817-7590-4574-8292-ebca2233a34b", "f9f38a8c-e41e-4c70-9b1d-4330c32609d5", "Parent", "PARENT" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { "c44bd4e6-650a-48c0-a8d8-c9bb091bf2d8", "55c654d4-690e-4d97-8add-4eab1db67517", "Child", "CHILD" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -256,6 +296,11 @@ namespace PlannerProject.Migrations
                 column: "IdentityUserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Chore_PlannerId",
+                table: "Chore",
+                column: "PlannerId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Parent_IdentityUserId",
                 table: "Parent",
                 column: "IdentityUserId");
@@ -282,10 +327,19 @@ namespace PlannerProject.Migrations
                 name: "Child");
 
             migrationBuilder.DropTable(
+                name: "Chore");
+
+            migrationBuilder.DropTable(
                 name: "Parent");
 
             migrationBuilder.DropTable(
+                name: "ParentChildJunction");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Planner");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

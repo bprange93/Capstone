@@ -48,15 +48,15 @@ namespace PlannerProject.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "4e7c3543-72c1-45a0-9d0d-a72d3a3c8241",
-                            ConcurrencyStamp = "0edcb1c4-f2ac-4213-a1cc-b852dfe67173",
+                            Id = "b98c7817-7590-4574-8292-ebca2233a34b",
+                            ConcurrencyStamp = "f9f38a8c-e41e-4c70-9b1d-4330c32609d5",
                             Name = "Parent",
                             NormalizedName = "PARENT"
                         },
                         new
                         {
-                            Id = "0165ae54-c32f-45cb-80b8-19f85e522bfa",
-                            ConcurrencyStamp = "e7d4612e-04be-4fe1-955f-722879f3288f",
+                            Id = "c44bd4e6-650a-48c0-a8d8-c9bb091bf2d8",
+                            ConcurrencyStamp = "55c654d4-690e-4d97-8add-4eab1db67517",
                             Name = "Child",
                             NormalizedName = "CHILD"
                         });
@@ -238,12 +238,6 @@ namespace PlannerProject.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("ChoreDone")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("ChoresList")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
@@ -251,9 +245,6 @@ namespace PlannerProject.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Rewards")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -263,21 +254,30 @@ namespace PlannerProject.Migrations
                     b.ToTable("Child");
                 });
 
+            modelBuilder.Entity("PlannerProject.Models.Chore", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("PlannerId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("isCompleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Name");
+
+                    b.HasIndex("PlannerId");
+
+                    b.ToTable("Chore");
+                });
+
             modelBuilder.Entity("PlannerProject.Models.Parent", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Child")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("ChoreDone")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("ChoresList")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
@@ -288,14 +288,47 @@ namespace PlannerProject.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Rewards")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("IdentityUserId");
 
                     b.ToTable("Parent");
+                });
+
+            modelBuilder.Entity("PlannerProject.Models.ParentChildJunction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ChildId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ParentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ParentChildJunction");
+                });
+
+            modelBuilder.Entity("PlannerProject.Models.Planner", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("DayOfWeek")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reward")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Planner");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -354,6 +387,13 @@ namespace PlannerProject.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
                         .WithMany()
                         .HasForeignKey("IdentityUserId");
+                });
+
+            modelBuilder.Entity("PlannerProject.Models.Chore", b =>
+                {
+                    b.HasOne("PlannerProject.Models.Planner", null)
+                        .WithMany("chores")
+                        .HasForeignKey("PlannerId");
                 });
 
             modelBuilder.Entity("PlannerProject.Models.Parent", b =>

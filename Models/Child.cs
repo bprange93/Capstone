@@ -14,9 +14,6 @@ namespace PlannerProject.Models
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string ChoresList { get; set; }
-        public bool ChoreDone { get; set; } 
-        public string Rewards { get; set; }
         [ForeignKey("IdentityUser")]
         public string IdentityUserId { get; set; }
         public IdentityUser IdentityUser { get; set; }
