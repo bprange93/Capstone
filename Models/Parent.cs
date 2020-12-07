@@ -17,5 +17,9 @@ namespace PlannerProject.Models
         [ForeignKey("IdentityUser")]
         public string IdentityUserId { get; set; }
         public IdentityUser IdentityUser { get; set; }
+        //[ForeignKey("ChildId")]
+
+
+        //public List<Child> children { get; set; }
     }
 }

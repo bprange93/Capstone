@@ -33,6 +33,9 @@ namespace PlannerProject.Data
                      }
 
             );
+            //base.OnModelCreating(builder);
+            //builder.Entity<ParentChildJunction>().HasNoKey(); //NoKey
+            //builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         }
         public DbSet<PlannerProject.Models.Planner> Planner { get; set; }
         public DbSet<PlannerProject.Models.ParentChildJunction> ParentChildJunction { get; set; }

@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace PlannerProject.Models
 {
-    public class Chore
+    public class Reminder
     {
         [Key]
-        public string Name { get; set; }
-        public bool isCompleted { get; set; }
-        [ForeignKey("PlannerId")]
-        public int plannerId { get; set; }
+        public int Id { get; set; }
+        public string reminder { get; set; }
+        [ForeignKey ("parentId")]
+        public int parentId { get; set; }
     }
 }

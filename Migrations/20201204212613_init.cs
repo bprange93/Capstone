@@ -47,6 +47,19 @@ namespace PlannerProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Chore",
+                columns: table => new
+                {
+                    Name = table.Column<string>(nullable: false),
+                    isCompleted = table.Column<bool>(nullable: false),
+                    plannerId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Chore", x => x.Name);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ParentChildJunction",
                 columns: table => new
                 {
@@ -67,7 +80,8 @@ namespace PlannerProject.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DayOfWeek = table.Column<string>(nullable: true),
-                    Reward = table.Column<string>(nullable: true)
+                    Reward = table.Column<string>(nullable: true),
+                    TimeOfDay = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -181,27 +195,6 @@ namespace PlannerProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Child",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true),
-                    IdentityUserId = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Child", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Child_AspNetUsers_IdentityUserId",
-                        column: x => x.IdentityUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Parent",
                 columns: table => new
                 {
@@ -223,21 +216,29 @@ namespace PlannerProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Chore",
+                name: "Child",
                 columns: table => new
                 {
-                    Name = table.Column<string>(nullable: false),
-                    isCompleted = table.Column<bool>(nullable: false),
-                    plannerId = table.Column<string>(nullable: true),
-                    plannerId1 = table.Column<int>(nullable: true)
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    IdentityUserId = table.Column<string>(nullable: true),
+                    ParentChildJunctionId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Chore", x => x.Name);
+                    table.PrimaryKey("PK_Child", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Chore_Planner_plannerId1",
-                        column: x => x.plannerId1,
-                        principalTable: "Planner",
+                        name: "FK_Child_AspNetUsers_IdentityUserId",
+                        column: x => x.IdentityUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Child_ParentChildJunction_ParentChildJunctionId",
+                        column: x => x.ParentChildJunctionId,
+                        principalTable: "ParentChildJunction",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -245,12 +246,12 @@ namespace PlannerProject.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "37572c23-8404-4e9f-b8ce-ba9134af4178", "09e6e913-8cfa-4b6e-88ca-ba4e1bfc4541", "Parent", "PARENT" });
+                values: new object[] { "0c76dd46-2851-45bb-b699-d987e711503c", "988a26fd-5b37-4c7b-8a4b-2093828a53b1", "Parent", "PARENT" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "50be308d-9f24-487a-8768-4fe3b4468f2b", "7a3454e2-3e56-46ec-8bab-f184e5519a5b", "Child", "CHILD" });
+                values: new object[] { "f8d5dbcb-164b-4634-8ca7-2f53f4a0ef84", "eeb268df-05fa-4e95-a6f6-97456394f5a6", "Child", "CHILD" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -297,9 +298,9 @@ namespace PlannerProject.Migrations
                 column: "IdentityUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Chore_plannerId1",
-                table: "Chore",
-                column: "plannerId1");
+                name: "IX_Child_ParentChildJunctionId",
+                table: "Child",
+                column: "ParentChildJunctionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Parent_IdentityUserId",
@@ -334,13 +335,13 @@ namespace PlannerProject.Migrations
                 name: "Parent");
 
             migrationBuilder.DropTable(
-                name: "ParentChildJunction");
+                name: "Planner");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Planner");
+                name: "ParentChildJunction");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

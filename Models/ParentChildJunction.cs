@@ -9,6 +9,7 @@ namespace PlannerProject.Models
 {
     public class ParentChildJunction
     {
+        
         [Key]
         public int Id { get; set; }
 
@@ -16,5 +17,6 @@ namespace PlannerProject.Models
         public int ParentId { get; set; }
         [ForeignKey("ChildId")]
         public int ChildId { get; set; }
+        public List<Child> children { get; set; }
     }
 }

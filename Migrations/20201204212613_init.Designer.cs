@@ -10,7 +10,7 @@ using PlannerProject.Data;
 namespace PlannerProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201201183022_init")]
+    [Migration("20201204212613_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,15 +50,15 @@ namespace PlannerProject.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "37572c23-8404-4e9f-b8ce-ba9134af4178",
-                            ConcurrencyStamp = "09e6e913-8cfa-4b6e-88ca-ba4e1bfc4541",
+                            Id = "0c76dd46-2851-45bb-b699-d987e711503c",
+                            ConcurrencyStamp = "988a26fd-5b37-4c7b-8a4b-2093828a53b1",
                             Name = "Parent",
                             NormalizedName = "PARENT"
                         },
                         new
                         {
-                            Id = "50be308d-9f24-487a-8768-4fe3b4468f2b",
-                            ConcurrencyStamp = "7a3454e2-3e56-46ec-8bab-f184e5519a5b",
+                            Id = "f8d5dbcb-164b-4634-8ca7-2f53f4a0ef84",
+                            ConcurrencyStamp = "eeb268df-05fa-4e95-a6f6-97456394f5a6",
                             Name = "Child",
                             NormalizedName = "CHILD"
                         });
@@ -249,9 +249,14 @@ namespace PlannerProject.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ParentChildJunctionId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("IdentityUserId");
+
+                    b.HasIndex("ParentChildJunctionId");
 
                     b.ToTable("Child");
                 });
@@ -264,15 +269,10 @@ namespace PlannerProject.Migrations
                     b.Property<bool>("isCompleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("plannerId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("plannerId1")
+                    b.Property<int>("plannerId")
                         .HasColumnType("int");
 
                     b.HasKey("Name");
-
-                    b.HasIndex("plannerId1");
 
                     b.ToTable("Chore");
                 });
@@ -330,6 +330,9 @@ namespace PlannerProject.Migrations
 
                     b.Property<string>("Reward")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TimeOfDay")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -392,13 +395,10 @@ namespace PlannerProject.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
                         .WithMany()
                         .HasForeignKey("IdentityUserId");
-                });
 
-            modelBuilder.Entity("PlannerProject.Models.Chore", b =>
-                {
-                    b.HasOne("PlannerProject.Models.Planner", "planner")
-                        .WithMany()
-                        .HasForeignKey("plannerId1");
+                    b.HasOne("PlannerProject.Models.ParentChildJunction", null)
+                        .WithMany("children")
+                        .HasForeignKey("ParentChildJunctionId");
                 });
 
             modelBuilder.Entity("PlannerProject.Models.Parent", b =>
