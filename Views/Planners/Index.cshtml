@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PlannerProject.Models.Child>
+﻿@model IEnumerable<PlannerProject.Models.Planner>
 
 @{
     ViewData["Title"] = "Index";
@@ -8,17 +8,19 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="CreateChild">Add Child</a>
-    <a asp-action="DetailsParent">Your Details</a>
+    <a asp-action="Create">Create New</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.FirstName)
+                @Html.DisplayNameFor(model => model.DayOfWeek)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LastName)
+                @Html.DisplayNameFor(model => model.Reward)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TimeOfDay)
             </th>
             <th></th>
         </tr>
@@ -27,10 +29,13 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
+                @Html.DisplayFor(modelItem => item.DayOfWeek)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.LastName)
+                @Html.DisplayFor(modelItem => item.Reward)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TimeOfDay)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

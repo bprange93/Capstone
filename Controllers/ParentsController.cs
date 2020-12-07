@@ -47,7 +47,7 @@ namespace PlannerProject.Controllers
             
         }
 
-        // GET: Parents/Details/5
+        // GET: Parents/Details/[Child]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -64,6 +64,26 @@ namespace PlannerProject.Controllers
             }
 
             return View(child);
+        }
+
+        //GET: Parents/Details/[Parent]
+        //
+        public async Task<IActionResult> DetailsParent(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var parent = await _context.Parent
+                .Include(p => p.IdentityUser)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (parent == null)
+            {
+                return NotFound();
+            }
+
+            return View(parent);
         }
 
         // GET: Parents/Create
@@ -124,8 +144,30 @@ namespace PlannerProject.Controllers
             return View(child);
         }
 
+        //New method to add a chore
+        //GET CreateChore
+        public ActionResult CreateChore()
+        {
+            return View();
+        }
 
-        // GET: Parents/Edit/5
+        //POST/CreateChore
+        //Creates chore to be added to the list to be displayed. 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateChore([Bind("Name, isComplete")] Chore chore)
+        {
+            if (ModelState.IsValid) {
+                _context.Add(chore);
+                await _context.SaveChangesAsync();
+            }
+
+            return View();
+        }
+
+        
+
+                // GET: Parents/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -147,9 +189,9 @@ namespace PlannerProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,IdentityUserId")] Parent parent)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,IdentityUserId")] Child child)
         {
-            if (id != parent.Id)
+            if (id != child.Id)
             {
                 return NotFound();
             }
@@ -158,12 +200,12 @@ namespace PlannerProject.Controllers
             {
                 try
                 {
-                    _context.Update(parent);
+                    _context.Update(child);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ParentExists(parent.Id))
+                    if (!ParentExists(child.Id))
                     {
                         return NotFound();
                     }
@@ -174,8 +216,8 @@ namespace PlannerProject.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", parent.IdentityUserId);
-            return View(parent);
+            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", child.IdentityUserId);
+            return View(child);
         }
 
         // GET: Parents/Delete/5
