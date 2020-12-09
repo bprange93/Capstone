@@ -24,10 +24,10 @@ namespace PlannerProject.Controllers
         public async Task<IActionResult> Index()
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var CurrentParent = _context.Parent.Where(e => e.IdentityUserId == userId).SingleOrDefault();          
+            var CurrentParent = _context.Parent.Where(e => e.IdentityUserId == userId).SingleOrDefault();
 
-            //ParentChildJunction parentChild = new ParentChildJunction();
-            
+
+
             if (CurrentParent == null)
             {
                 return RedirectToAction(nameof(Create));
@@ -76,7 +76,7 @@ namespace PlannerProject.Controllers
             }
 
             var parent = await _context.Parent
-                .Include(p => p.IdentityUser)
+                .Include(p => p.IdentityUserId)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (parent == null)
             {
@@ -132,9 +132,10 @@ namespace PlannerProject.Controllers
                 _context.Add(child);
                 await _context.SaveChangesAsync();
 
+
                 ParentChildJunction parentChildJunction = new ParentChildJunction();
-                parentChildJunction.ChildId = _context.Child.ToList().Last().Id;
-                parentChildJunction.ParentId = _context.Parent.Where(parent => parent.IdentityUserId == userId).ToList().First().Id;
+                parentChildJunction.ChildId = child.Id;
+                parentChildJunction.ParentId = _context.Parent.Where(parent => parent.IdentityUserId == userId).FirstOrDefault().Id;
                 _context.ParentChildJunction.Add(parentChildJunction);
                 await _context.SaveChangesAsync();
 
@@ -144,10 +145,12 @@ namespace PlannerProject.Controllers
             return View(child);
         }
 
+
         //New method to add a chore
         //GET CreateChore
-        public ActionResult CreateChore()
+        public ActionResult CreateChoreList(int? childId)
         {
+            ViewBag.ChildId = childId;
             return View();
         }
 
@@ -155,7 +158,34 @@ namespace PlannerProject.Controllers
         //Creates chore to be added to the list to be displayed. 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateChore([Bind("Name, isComplete")] Chore chore)
+        public async Task<IActionResult> CreateChoreList([Bind("DayOfWeek,Reward,Title,Comment,ChildId")] ChoreList choreList)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(choreList);
+                await _context.SaveChangesAsync();
+                //Redirect to the CreateChoreItem when it gets created instead of Index.
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
+
+        //New method to add a chore
+        //GET CreateChore
+        public ActionResult CreateChore()
+        {
+
+            return View();
+        }
+
+        //POST/CreateChore
+        //Creates chore to be added to the list to be displayed. 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateChore([Bind("Name, isComplete,EndTime,Description")] ChoreItem chore)
         {
             if (ModelState.IsValid) {
                 _context.Add(chore);
@@ -165,9 +195,32 @@ namespace PlannerProject.Controllers
             return View();
         }
 
-        
 
-                // GET: Parents/Edit/5
+        //New method to add a chore
+        //GET CreateChore
+        public ActionResult CreateReminder()
+        {
+            return View();
+        }
+
+        //POST/CreateChore
+        //Creates chore to be added to the list to be displayed. 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateReminder([Bind("Id, reminder")] ParentsTask reminder)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(reminder);
+                await _context.SaveChangesAsync();
+            }
+
+            return View();
+        }
+
+
+
+        // GET: Parents/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -219,6 +272,60 @@ namespace PlannerProject.Controllers
             ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", child.IdentityUserId);
             return View(child);
         }
+
+
+        public async Task<IActionResult> EditParent(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var parent = await _context.Child.FindAsync(id);
+            if (parent == null)
+            {
+                return NotFound();
+            }
+            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", parent.IdentityUserId);
+            return View(parent);
+        }
+
+        // POST: Parents/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditParent(int id, [Bind("Id,FirstName,LastName,IdentityUserId")] Parent parent)
+        {
+            if (id != parent.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(parent);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ParentExists(parent.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", parent.IdentityUserId);
+            return View(parent);
+        }
+
 
         // GET: Parents/Delete/5
         public async Task<IActionResult> Delete(int? id)

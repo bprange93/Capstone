@@ -21,11 +21,11 @@ namespace PlannerProject.ActionFilters
             var controller = context.RouteData.Values["controller"];
             if (controller.Equals("Home"))
             {
-                if (_claimsPrincipal.IsInRole("Parents"))
+                if (_claimsPrincipal.IsInRole("Parent"))
                 {
                     context.Result = new RedirectToActionResult("Index", "Parents", null);
                 }
-                else if (_claimsPrincipal.IsInRole("Children"))
+                else if (_claimsPrincipal.IsInRole("Child"))
                 {
                     context.Result = new RedirectToActionResult("Index", "Children", null);
                 }

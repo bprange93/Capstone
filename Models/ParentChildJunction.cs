@@ -13,10 +13,11 @@ namespace PlannerProject.Models
         [Key]
         public int Id { get; set; }
 
-        [ForeignKey("ParentId")]
+        [ForeignKey("Parent")]
         public int ParentId { get; set; }
-        [ForeignKey("ChildId")]
+        public Parent Parent { get; set; }
+        [ForeignKey("Child")]
         public int ChildId { get; set; }
-        public List<Child> children { get; set; }
+        public Child Child { get; set; }
     }
 }

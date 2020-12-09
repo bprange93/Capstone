@@ -35,8 +35,10 @@ namespace PlannerProject.Data
             );
            
         }
-        public DbSet<PlannerProject.Models.Planner> Planner { get; set; }
-        public DbSet<PlannerProject.Models.ParentChildJunction> ParentChildJunction { get; set; }
-        public DbSet<PlannerProject.Models.Chore> Chore { get; set; }
+        public DbSet<ChoreList> ChoreList { get; set; }
+        public DbSet<ParentChildJunction> ParentChildJunction { get; set; }
+        public DbSet<ChoreItem> ChoreItem { get; set; }
+        public DbSet<ParentsTask> ParentesTask { get; set; }
+        //public DbSet<ChoreVM> ChoreVM { get; set; }
     }
 }
