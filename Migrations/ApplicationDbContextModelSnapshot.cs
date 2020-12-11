@@ -48,15 +48,15 @@ namespace PlannerProject.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ab4b42b6-8ea2-4405-b59a-112fdf295255",
-                            ConcurrencyStamp = "0a1eaacc-fd3c-4f5b-a663-6ed1919da3c7",
+                            Id = "77b9d5aa-401c-45bd-a4cf-ee29bcf2a3ac",
+                            ConcurrencyStamp = "73cbe228-ed42-4362-86c9-8c6b7a34896e",
                             Name = "Parent",
                             NormalizedName = "PARENT"
                         },
                         new
                         {
-                            Id = "636de195-fe33-4ebe-bd66-1e235f943222",
-                            ConcurrencyStamp = "516cf577-6e75-4a34-acea-0f98f7c798f2",
+                            Id = "15cf2698-4403-441b-bc09-201cb6ac816a",
+                            ConcurrencyStamp = "b9a83968-9358-4b76-bfd2-495ec2f3c93e",
                             Name = "Child",
                             NormalizedName = "CHILD"
                         });

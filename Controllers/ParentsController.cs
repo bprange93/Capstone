@@ -67,7 +67,6 @@ namespace PlannerProject.Controllers
         }
 
         //GET: Parents/Details/[Parent]
-        //
         public async Task<IActionResult> DetailsParent(int? id)
         {
             if (id == null)
@@ -146,11 +145,15 @@ namespace PlannerProject.Controllers
         }
 
 
+        //GET: Parents/Details/[Parent]
+        //public async Task<IActionResult> DetailsParent(int? id)
+
         //New method to add a chore
         //GET CreateChore
-        public ActionResult CreateChoreList(int? childId)
+        [HttpGet]
+        public ActionResult CreateChoreList(int? id)
         {
-            ViewBag.ChildId = childId;
+            ViewBag.Child_Id = id;
             return View();
         }
 
@@ -165,19 +168,18 @@ namespace PlannerProject.Controllers
                 _context.Add(choreList);
                 await _context.SaveChangesAsync();
                 //Redirect to the CreateChoreItem when it gets created instead of Index.
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("CreateChoreItem", new { id = choreList.Id });
             }
 
             return RedirectToAction(nameof(Index));
         }
 
-
-
         //New method to add a chore
         //GET CreateChore
-        public ActionResult CreateChore()
+        [HttpGet]
+        public ActionResult CreateChoreItem(int? id)
         {
-
+            ViewBag.ChoreListId = id;
             return View();
         }
 
@@ -185,19 +187,38 @@ namespace PlannerProject.Controllers
         //Creates chore to be added to the list to be displayed. 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateChore([Bind("Name, isComplete,EndTime,Description")] ChoreItem chore)
+        public async Task<IActionResult> CreateChoreItem([Bind("Name, isComplete,EndTime,Description,ChoreListId")] ChoreItem chore)
         {
-            if (ModelState.IsValid) {
+            if (ModelState.IsValid)
+            {
                 _context.Add(chore);
                 await _context.SaveChangesAsync();
+                return RedirectToAction("CreateChoreItem", new { id = chore.ChoreListId});
             }
 
             return View();
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ViewChores(int? id)
+        {
+            //Using ChildId as a filter. Can only bring up 1 list per child. 
+            //If want to bring up more than 1 list will have to filter by List and not Child. (Possible future implementation.)
+            ViewBag.ChoreListId = id;
+            var ViewChoreList = from s in _context.ChoreItem
+                                        join st in _context.ChoreList on s.ChoreListId equals st.Id into st2
+                                        from st in st2.DefaultIfEmpty()
+                                        select new ChoreVM { ChoreItemVM = s, ChoreListVM = st };
+            var FilterList = ViewChoreList.Where(c => c.ChoreListVM.ChildId == id);
+
+            return View(FilterList);
+        }
+
+
 
         //New method to add a chore
         //GET CreateChore
+        //Parents version of the ChoreList. (ParentsTask)
         public ActionResult CreateReminder()
         {
             return View();
