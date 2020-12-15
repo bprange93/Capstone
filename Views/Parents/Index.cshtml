@@ -6,11 +6,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Welcome!</h1>
 
 <p>
     <a asp-action="CreateChild">Add Child</a>
-     @*<a asp-action="DetailsParent" asp-route-id="@models.Parent.Id">Your Details</a>*@
+    <a asp-action="CreateParentsTask">Make Parent List</a>
+    <a asp-action="ViewParentsTask">View Parent Lists</a>
+    @*<a asp-action="DetailsParent" asp-route-id="@models.Parent.Id">Your Details</a>*@
 </p>
 <table class="table">
     <thead>
@@ -35,8 +37,9 @@
                     @Html.DisplayFor(modelItem => item.LastName)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="CreateChoreList" asp-route-id="@item.Id">Add Chore</a> |
+                    <a asp-action="ViewChores" asp-route-id="@item.Id">View Chores</a> |
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>
