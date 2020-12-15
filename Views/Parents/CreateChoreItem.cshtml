@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>CreateChoreItem</h1>
+<h1>Specifics</h1>
 
 <h4>ChoreItem</h4>
 <hr />
@@ -19,18 +19,18 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div hidden class="form-group">
                 <label asp-for="ChoreListId" class="control-label"></label>
-                <input asp-for="ChoreListId" class ="form-control" value="@ViewBag.ChoreListId"/>
+                <input asp-for="ChoreListId" class="form-control" value="@ViewBag.ChoreListId" />
             </div>
             <div class="form-group">
                 <label asp-for="EndTime" class="control-label"></label>
                 <input asp-for="EndTime" class="form-control" />
                 <span asp-validation-for="EndTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
