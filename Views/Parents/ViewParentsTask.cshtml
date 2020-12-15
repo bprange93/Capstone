@@ -1,0 +1,43 @@
+﻿@model IEnumerable<PlannerProject.Models.ParentsTask>
+
+@{
+    ViewData["Title"] = "ViewParentsTask";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Your Lists</h1>
+
+<p>
+    <a asp-action="CreateParentsTask">Add New List</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr> 
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
