@@ -12,7 +12,8 @@ namespace PlannerProject.Models
         
             [Key]
             public int Id { get; set; }
-            public string DayOfWeek { get; set; }
+        [Display(Name = "Day of the Week")]
+        public string DayOfWeek { get; set; }
             public string Reward { get; set; }
             public string Title { get; set; }
             public string Comment { get; set; }
