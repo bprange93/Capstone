@@ -16,6 +16,12 @@ namespace PlannerProject.Data
         }
         public DbSet<Parent> Parent { get; set; }
         public DbSet<Child> Child { get; set; }
+        public DbSet<ChoreList> ChoreList { get; set; }
+        public DbSet<ParentChildJunction> ParentChildJunction { get; set; }
+        public DbSet<ChoreItem> ChoreItem { get; set; }
+        public DbSet<ParentsTask> ParentsTask { get; set; }
+        public DbSet<ParentItem> ParentItem { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -35,10 +41,6 @@ namespace PlannerProject.Data
             );
            
         }
-        public DbSet<ChoreList> ChoreList { get; set; }
-        public DbSet<ParentChildJunction> ParentChildJunction { get; set; }
-        public DbSet<ChoreItem> ChoreItem { get; set; }
-        public DbSet<ParentsTask> ParentesTask { get; set; }
-        //public DbSet<ChoreVM> ChoreVM { get; set; }
+       
     }
 }

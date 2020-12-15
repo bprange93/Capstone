@@ -218,29 +218,6 @@ namespace PlannerProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ParentesTask",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Reminders = table.Column<string>(nullable: true),
-                    Type = table.Column<string>(nullable: true),
-                    ChildId = table.Column<int>(nullable: false),
-                    Description = table.Column<string>(nullable: true),
-                    Title = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ParentesTask", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ParentesTask_Child_ChildId",
-                        column: x => x.ChildId,
-                        principalTable: "Child",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ParentChildJunction",
                 columns: table => new
                 {
@@ -267,10 +244,35 @@ namespace PlannerProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ParentsTask",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Reminders = table.Column<string>(nullable: true),
+                    Type = table.Column<string>(nullable: true),
+                    ParentId = table.Column<int>(nullable: false),
+                    Description = table.Column<string>(nullable: true),
+                    Title = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ParentsTask", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ParentsTask_Parent_ParentId",
+                        column: x => x.ParentId,
+                        principalTable: "Parent",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ChoreItem",
                 columns: table => new
                 {
-                    Name = table.Column<string>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
                     isCompleted = table.Column<bool>(nullable: false),
                     ChoreListId = table.Column<int>(nullable: false),
                     EndTime = table.Column<string>(nullable: true),
@@ -278,7 +280,7 @@ namespace PlannerProject.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ChoreItem", x => x.Name);
+                    table.PrimaryKey("PK_ChoreItem", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ChoreItem_ChoreList_ChoreListId",
                         column: x => x.ChoreListId,
@@ -287,15 +289,33 @@ namespace PlannerProject.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "77b9d5aa-401c-45bd-a4cf-ee29bcf2a3ac", "73cbe228-ed42-4362-86c9-8c6b7a34896e", "Parent", "PARENT" });
+            migrationBuilder.CreateTable(
+                name: "ParentItem",
+                columns: table => new
+                {
+                    Name = table.Column<string>(nullable: false),
+                    ParentsTaskId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ParentItem", x => x.Name);
+                    table.ForeignKey(
+                        name: "FK_ParentItem_ParentsTask_ParentsTaskId",
+                        column: x => x.ParentsTaskId,
+                        principalTable: "ParentsTask",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "15cf2698-4403-441b-bc09-201cb6ac816a", "b9a83968-9358-4b76-bfd2-495ec2f3c93e", "Child", "CHILD" });
+                values: new object[] { "42cf950a-8b14-41ab-b90f-43120404a1fa", "e9ab6af1-e3cf-474a-bc49-96f6fe9b831a", "Parent", "PARENT" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { "9f483aaa-1ab0-4934-ac3c-3ad895fcf8c2", "88d6d77e-7cf3-48da-9b53-1c71a6fc7a06", "Child", "CHILD" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -367,9 +387,14 @@ namespace PlannerProject.Migrations
                 column: "ParentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ParentesTask_ChildId",
-                table: "ParentesTask",
-                column: "ChildId");
+                name: "IX_ParentItem_ParentsTaskId",
+                table: "ParentItem",
+                column: "ParentsTaskId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ParentsTask_ParentId",
+                table: "ParentsTask",
+                column: "ParentId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -396,7 +421,7 @@ namespace PlannerProject.Migrations
                 name: "ParentChildJunction");
 
             migrationBuilder.DropTable(
-                name: "ParentesTask");
+                name: "ParentItem");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -405,10 +430,13 @@ namespace PlannerProject.Migrations
                 name: "ChoreList");
 
             migrationBuilder.DropTable(
-                name: "Parent");
+                name: "ParentsTask");
 
             migrationBuilder.DropTable(
                 name: "Child");
+
+            migrationBuilder.DropTable(
+                name: "Parent");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

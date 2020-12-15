@@ -10,7 +10,7 @@ using PlannerProject.Data;
 namespace PlannerProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201210174426_init")]
+    [Migration("20201214214738_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,15 +50,15 @@ namespace PlannerProject.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "77b9d5aa-401c-45bd-a4cf-ee29bcf2a3ac",
-                            ConcurrencyStamp = "73cbe228-ed42-4362-86c9-8c6b7a34896e",
+                            Id = "42cf950a-8b14-41ab-b90f-43120404a1fa",
+                            ConcurrencyStamp = "e9ab6af1-e3cf-474a-bc49-96f6fe9b831a",
                             Name = "Parent",
                             NormalizedName = "PARENT"
                         },
                         new
                         {
-                            Id = "15cf2698-4403-441b-bc09-201cb6ac816a",
-                            ConcurrencyStamp = "b9a83968-9358-4b76-bfd2-495ec2f3c93e",
+                            Id = "9f483aaa-1ab0-4934-ac3c-3ad895fcf8c2",
+                            ConcurrencyStamp = "88d6d77e-7cf3-48da-9b53-1c71a6fc7a06",
                             Name = "Child",
                             NormalizedName = "CHILD"
                         });
@@ -258,8 +258,10 @@ namespace PlannerProject.Migrations
 
             modelBuilder.Entity("PlannerProject.Models.ChoreItem", b =>
                 {
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("ChoreListId")
                         .HasColumnType("int");
@@ -270,10 +272,13 @@ namespace PlannerProject.Migrations
                     b.Property<string>("EndTime")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("isCompleted")
                         .HasColumnType("bit");
 
-                    b.HasKey("Name");
+                    b.HasKey("Id");
 
                     b.HasIndex("ChoreListId");
 
@@ -354,6 +359,21 @@ namespace PlannerProject.Migrations
                     b.ToTable("ParentChildJunction");
                 });
 
+            modelBuilder.Entity("PlannerProject.Models.ParentItem", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ParentsTaskId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Name");
+
+                    b.HasIndex("ParentsTaskId");
+
+                    b.ToTable("ParentItem");
+                });
+
             modelBuilder.Entity("PlannerProject.Models.ParentsTask", b =>
                 {
                     b.Property<int>("Id")
@@ -361,11 +381,11 @@ namespace PlannerProject.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ChildId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ParentId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Reminders")
                         .HasColumnType("nvarchar(max)");
@@ -378,9 +398,9 @@ namespace PlannerProject.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChildId");
+                    b.HasIndex("ParentId");
 
-                    b.ToTable("ParentesTask");
+                    b.ToTable("ParentsTask");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -481,11 +501,20 @@ namespace PlannerProject.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PlannerProject.Models.ParentItem", b =>
+                {
+                    b.HasOne("PlannerProject.Models.ParentsTask", "ParentsTask")
+                        .WithMany()
+                        .HasForeignKey("ParentsTaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("PlannerProject.Models.ParentsTask", b =>
                 {
-                    b.HasOne("PlannerProject.Models.Child", "Child")
+                    b.HasOne("PlannerProject.Models.Parent", "Parent")
                         .WithMany()
-                        .HasForeignKey("ChildId")
+                        .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
