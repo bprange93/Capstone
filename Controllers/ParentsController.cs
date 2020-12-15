@@ -167,7 +167,6 @@ namespace PlannerProject.Controllers
             {
                 _context.Add(choreList);
                 await _context.SaveChangesAsync();
-                //Redirect to the CreateChoreItem when it gets created instead of Index.
                 return RedirectToAction("CreateChoreItem", new { id = choreList.Id });
             }
 
@@ -214,30 +213,114 @@ namespace PlannerProject.Controllers
             return View(FilterList);
         }
 
-
-
         //New method to add a chore
         //GET CreateChore
         //Parents version of the ChoreList. (ParentsTask)
-        public ActionResult CreateReminder()
+        [HttpGet]
+        public ActionResult CreateParentsTask()
         {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var ParentId = _context.Parent.Where(ParentId => ParentId.IdentityUserId == userId).FirstOrDefault().Id;
+            ViewBag.ParentId = ParentId;
+          
             return View();
         }
+
+        //Possible future implem
 
         //POST/CreateChore
         //Creates chore to be added to the list to be displayed. 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateReminder([Bind("Id, reminder")] ParentsTask reminder)
+        public async Task<IActionResult> CreateParentsTask([Bind("Id, Reminders,Type,Description,Title,ParentId")] ParentsTask reminder)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(reminder);
                 await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(ViewParentsTask));
             }
 
-            return View();
+            return RedirectToAction(nameof(Index));
         }
+
+        public async Task<IActionResult> ViewParentsTask()
+        {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var ParentId = _context.Parent.Where(ParentId => ParentId.IdentityUserId == userId).FirstOrDefault().Id;
+            ViewBag.ParentId = ParentId;
+            if (ParentId == null)
+            {
+                return NotFound();
+            }
+
+            var ParentsTask = await _context.ParentsTask.Where(data => data.ParentId == ParentId).ToListAsync();
+            if (ParentsTask == null)
+            {
+                return NotFound();
+            }
+
+            return View(ParentsTask);
+        }
+
+        public IActionResult isCompleted(int id)
+        {
+            ChoreItem choreItem = new ChoreItem();
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var SelectChoreItem = _context.ChoreItem.Where(e => e.Id == id).FirstOrDefault();
+            choreItem = SelectChoreItem;
+            if (choreItem.isCompleted)
+            {
+                choreItem.isCompleted = false;
+            }
+            else
+            {
+                choreItem.isCompleted = true;
+            }
+            _context.Update(choreItem);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Index));
+        }
+
+        ////New method to add a chore
+        ////GET CreateChore
+        //[HttpGet]
+        //public ActionResult CreateParentItem(int? id)
+        //{
+        //    ViewBag.ParentsTaskId = id;
+        //    return View();
+        //}
+
+        ////POST/CreateChore
+        ////Creates chore to be added to the list to be displayed. 
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> CreateParentItem([Bind("Name,ParentTaskId")] ParentItem reminder)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Add(reminder);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction("CreateParentItem", new { id = reminder.ParentsTaskId });
+        //    }
+
+        //    return View();
+        //}
+
+        //[HttpGet]
+        //public async Task<IActionResult> ViewParentItems(int? id)
+        //{
+        //    //Using ChildId as a filter. Can only bring up 1 list per child. 
+        //    //If want to bring up more than 1 list will have to filter by List and not Child. (Possible future implementation.)
+        //    ViewBag.ParentsTaskId = id;
+        //    var ViewParentsTask = from s in _context.ParentItem
+        //                        join st in _context.ParentsTask on s.ParentsTaskId equals st.Id into st2
+        //                        from st in st2.DefaultIfEmpty()
+        //                        select new ParentTaskVM { ParentItemVM = s, ParentsTaskVM = st };
+        //    var FilterList = ViewParentsTask.Where(c => c.ParentsTaskVM.ParentId == id);
+
+        //    return View(FilterList);
+        //}
 
 
 
