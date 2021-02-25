@@ -9,18 +9,18 @@
 
 <h1>Chores</h1>
 
-<table class="table">
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    <h1>@Html.DisplayFor(modelItem => item.ChoreItemVM.Name)</h1>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+@*<table class="table">
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <h1>@Html.DisplayFor(modelItem => item.ChoreItemVM.Name)</h1>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>*@
 
 <table class="table">
     <thead>
@@ -29,7 +29,7 @@
                 @Html.DisplayNameFor(model => model.ChoreItemVM.isCompleted)
             </th>
             <th>
-                
+
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ChoreItemVM.EndTime)
@@ -49,26 +49,26 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ChoreItemVM.isCompleted)
-            </td>
-            <td>
-                <a asp-action="isCompleted" asp-route-id="@item.ChoreItemVM.Id">Chore Complete</a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ChoreItemVM.EndTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ChoreItemVM.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ChoreListVM.Reward)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ChoreListVM.DayOfWeek)
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ChoreItemVM.isCompleted)
+                </td>
+                <td>
+                    <a asp-action="isCompleted" asp-route-id="@item.ChoreItemVM.Id">Chore Complete</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ChoreItemVM.EndTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ChoreItemVM.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ChoreListVM.Reward)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ChoreListVM.DayOfWeek)
+                </td>
+            </tr>
         }
     </tbody>
 </table>
