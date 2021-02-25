@@ -10,7 +10,7 @@ using PlannerProject.Data;
 namespace PlannerProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201214214738_init")]
+    [Migration("20210218213328_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,15 +50,15 @@ namespace PlannerProject.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "42cf950a-8b14-41ab-b90f-43120404a1fa",
-                            ConcurrencyStamp = "e9ab6af1-e3cf-474a-bc49-96f6fe9b831a",
+                            Id = "132e9cdb-2c93-449d-b91a-4ea40be1cdaf",
+                            ConcurrencyStamp = "d310b172-4c39-4cba-b69a-133501c91eb3",
                             Name = "Parent",
                             NormalizedName = "PARENT"
                         },
                         new
                         {
-                            Id = "9f483aaa-1ab0-4934-ac3c-3ad895fcf8c2",
-                            ConcurrencyStamp = "88d6d77e-7cf3-48da-9b53-1c71a6fc7a06",
+                            Id = "e1383968-303c-4754-b335-ce8aadb0527d",
+                            ConcurrencyStamp = "c12cfa7c-aacd-45da-a6b7-dc8df571abc9",
                             Name = "Child",
                             NormalizedName = "CHILD"
                         });
@@ -380,6 +380,9 @@ namespace PlannerProject.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ChildId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");

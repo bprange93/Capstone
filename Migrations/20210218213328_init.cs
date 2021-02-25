@@ -252,6 +252,7 @@ namespace PlannerProject.Migrations
                     Reminders = table.Column<string>(nullable: true),
                     Type = table.Column<string>(nullable: true),
                     ParentId = table.Column<int>(nullable: false),
+                    ChildId = table.Column<int>(nullable: false),
                     Description = table.Column<string>(nullable: true),
                     Title = table.Column<string>(nullable: true)
                 },
@@ -310,12 +311,12 @@ namespace PlannerProject.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "42cf950a-8b14-41ab-b90f-43120404a1fa", "e9ab6af1-e3cf-474a-bc49-96f6fe9b831a", "Parent", "PARENT" });
+                values: new object[] { "132e9cdb-2c93-449d-b91a-4ea40be1cdaf", "d310b172-4c39-4cba-b69a-133501c91eb3", "Parent", "PARENT" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "9f483aaa-1ab0-4934-ac3c-3ad895fcf8c2", "88d6d77e-7cf3-48da-9b53-1c71a6fc7a06", "Child", "CHILD" });
+                values: new object[] { "e1383968-303c-4754-b335-ce8aadb0527d", "c12cfa7c-aacd-45da-a6b7-dc8df571abc9", "Child", "CHILD" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
