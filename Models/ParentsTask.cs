@@ -15,6 +15,7 @@ namespace PlannerProject.Models
         public string Type { get; set; }
         [ForeignKey("Parent")]
         public int ParentId { get; set; }
+        public int ChildId { get; set; }
         public Parent Parent { get; set; }
         public string Description { get; set; }
         public string Title { get; set; }
