@@ -10,7 +10,7 @@ using PlannerProject.Data;
 namespace PlannerProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210218213328_init")]
+    [Migration("20210301213958_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,15 +50,15 @@ namespace PlannerProject.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "132e9cdb-2c93-449d-b91a-4ea40be1cdaf",
-                            ConcurrencyStamp = "d310b172-4c39-4cba-b69a-133501c91eb3",
+                            Id = "ab67f5e8-ec76-4995-b94f-b6b38c575e2b",
+                            ConcurrencyStamp = "e6433a47-2aab-4d30-b0be-2e93e16b4dc9",
                             Name = "Parent",
                             NormalizedName = "PARENT"
                         },
                         new
                         {
-                            Id = "e1383968-303c-4754-b335-ce8aadb0527d",
-                            ConcurrencyStamp = "c12cfa7c-aacd-45da-a6b7-dc8df571abc9",
+                            Id = "ad3138ac-f52f-4be2-9e47-a051f0e4dc74",
+                            ConcurrencyStamp = "deee34fa-a3d1-4d2c-9ded-2279fe0bfa91",
                             Name = "Child",
                             NormalizedName = "CHILD"
                         });
