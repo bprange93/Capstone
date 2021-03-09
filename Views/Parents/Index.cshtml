@@ -37,10 +37,10 @@
                     @Html.DisplayFor(modelItem => item.LastName)
                 </td>
                 <td>
-                    <a asp-action="CreateChoreList" asp-route-id="@item.Id">Add Chore</a> |
-                    <a asp-action="ViewChores" asp-route-id="@item.Id">View Chores</a> |
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" style="float: right;">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.Id" style="margin-right: 10px; float: right;">Edit</a> 
+                    <a asp-action="ViewChores" asp-route-id="@item.Id" style="margin-right: 10px;float: right;">View Chores</a> 
+                    <a asp-action="CreateChoreList" asp-route-id="@item.Id" style="margin-right: 10px; float: right;">Add Chore</a>
                 </td>
             </tr>
         }
